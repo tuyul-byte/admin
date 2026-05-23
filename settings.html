@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>WarehousePro - Pengaturan Sistem</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .settings-container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #008080 0%, #004d4d 100%);
+            border-radius: 24px;
+            padding: 20px 28px;
+            margin-bottom: 28px;
+            color: white;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+        }
+
+        .header h1 {
+            font-size: 1.7rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header p {
+            opacity: 0.85;
+            margin-top: 8px;
+            font-size: 0.85rem;
+        }
+
+        .badge-system {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            display: inline-block;
+        }
+
+        /* Grid layout */
+        .settings-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 20px 24px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            border: 1px solid #eef2f6;
+            transition: all 0.2s;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e2a3a;
+            border-left: 5px solid #008080;
+            padding-left: 14px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title span:first-child {
+            font-size: 1.3rem;
+        }
+
+        .two-columns {
+            display: flex;
+            gap: 28px;
+            flex-wrap: wrap;
+        }
+
+        .two-columns > div {
+            flex: 1;
+            min-width: 260px;
+        }
+
+        /* Form elements */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: #3b4a5c;
+            display: block;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 16px;
+            border: 1px solid #cfdfed;
+            font-size: 0.85rem;
+            transition: 0.2s;
+            background: #fff;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #008080;
+            box-shadow: 0 0 0 3px rgba(0,128,128,0.1);
+        }
+
+        button {
+            background: #008080;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #008080;
+            color: #008080;
+        }
+
+        .btn-outline:hover {
+            background: #e0f2f1;
+        }
+
+        .btn-danger {
+            background: #d32f2f;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-warning {
+            background: #ed6c02;
+        }
+
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 0.7rem;
+        }
+
+        .divisions-list {
+            margin-top: 12px;
+            border: 1px solid #eef2f6;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .division-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #eef2f6;
+            background: #fefefe;
+        }
+
+        .division-item:last-child {
+            border-bottom: none;
+        }
+
+        .division-name {
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .division-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn-small {
+            background: transparent;
+            padding: 5px 8px;
+            font-size: 0.7rem;
+            color: #008080;
+            border: 1px solid #cfdfed;
+            border-radius: 30px;
+            width: auto;
+        }
+
+        .icon-btn-small.delete {
+            color: #d32f2f;
+        }
+
+        .info-stat {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 20px;
+            margin-top: 16px;
+            font-size: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .toast-message {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1e2a3a;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            z-index: 2000;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+            transition: 0.2s;
+            animation: fadeInUp 0.2s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        hr {
+            margin: 18px 0;
+            border-color: #eef2f6;
+        }
+
+        .flex-btns {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .alert-note {
+            background: #fff8e1;
+            border-left: 4px solid #ffb74d;
+            padding: 12px 14px;
+            border-radius: 16px;
+            font-size: 0.7rem;
+            margin-top: 18px;
+            color: #e65100;
+        }
+
+        @media (max-width: 720px) {
+            body { padding: 12px; }
+            .card { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+<div class="settings-container">
+    <div class="header">
+        <h1>⚙️ Pengaturan WarehousePro</h1>
+        <p>Kelola konfigurasi sistem, keamanan, divisi, serta backup data. Semua perubahan tersimpan secara lokal.</p>
+        <div class="badge-system">Admin Panel • Pengaturan Terpusat</div>
+    </div>
+
+    <div class="settings-grid">
+        <!-- Keamanan & Password -->
+        <div class="card">
+            <div class="card-title">
+                <span>🔐</span> Keamanan Admin
+            </div>
+            <div class="two-columns">
+                <div>
+                    <div class="form-group">
+                        <label>Password Lama</label>
+                        <input type="password" id="oldPassword" placeholder="Masukkan password saat ini">
+                    </div>
+                    <div class="form-group">
+                        <label>Password Baru</label>
+                        <input type="password" id="newPassword" placeholder="Password baru minimal 6 karakter">
+                    </div>
+                    <div class="form-group">
+                        <label>Konfirmasi Password Baru</label>
+                        <input type="password" id="confirmPassword" placeholder="Ulangi password baru">
+                    </div>
+                    <button id="changePasswordBtn">🔄 Ganti Password Admin</button>
+                </div>
+                <div class="info-stat">
+                    <div>🔒 Status: <strong id="passwordStatus">Menggunakan default</strong></div>
+                    <div>📌 Catatan: Password digunakan untuk login ke panel utama.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manajemen Divisi (Custom) -->
+        <div class="card">
+            <div class="card-title">
+                <span>🏷️</span> Manajemen Divisi / Bagian
+            </div>
+            <div class="two-columns">
+                <div>
+                    <div class="form-group">
+                        <label>Nama Divisi Baru</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="newDivisionName" placeholder="Contoh: Quality Control" style="flex:1">
+                            <button id="addDivisionBtn" class="btn-sm">➕ Tambah</button>
+                        </div>
+                    </div>
+                    <div class="alert-note">
+                        💡 Divisi ini akan muncul di pilihan "Bagian" pada aktivitas harian, operator, dan modul lainnya (setelah refresh panel utama).
+                    </div>
+                </div>
+                <div>
+                    <label>📋 Daftar Divisi Aktif</label>
+                    <div id="divisionsListContainer" class="divisions-list">
+                        <!-- dynamic list -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Management & Tools -->
+        <div class="card">
+            <div class="card-title">
+                <span>💾</span> Manajemen Data & Cadangan
+            </div>
+            <div class="two-columns">
+                <div>
+                    <h4 style="font-size:0.85rem; margin-bottom: 10px;">📦 Ekspor / Impor Data</h4>
+                    <div class="flex-btns">
+                        <button id="exportFullDataBtn" class="btn-outline">📎 Ekspor Semua Data (JSON)</button>
+                        <button id="importDataTriggerBtn" class="btn-outline">📂 Impor Backup</button>
+                        <input type="file" id="importFileInput" accept=".json" style="display: none;">
+                    </div>
+                    <div class="flex-btns">
+                        <button id="resetDefaultDataBtn" class="btn-warning">🔄 Reset ke Data Awal</button>
+                        <button id="clearAllDataBtn" class="btn-danger">⚠️ Hapus Semua Data</button>
+                    </div>
+                    <div class="info-stat">
+                        <div>📊 Ringkasan penyimpanan saat ini:</div>
+                        <div id="storageStats">- Memuat statistik...</div>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="font-size:0.85rem; margin-bottom: 10px;">⚡ Tindakan Cepat</h4>
+                    <button id="openMainDashboardBtn" class="btn-outline" style="background:#00808010;">🏠 Buka Panel Admin Utama</button>
+                    <p style="font-size:0.7rem; margin-top: 12px; color:#5b6e8c;">* Pastikan file utama (index.html) dan pengaturan ini terhubung melalui localStorage yang sama.</p>
+                    <hr>
+                    <button id="syncSettingsNoteBtn" class="btn-sm" style="background:#00808020; color:#004d4d;">ℹ️ Sinkronisasi & Catatan</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informasi Sistem -->
+        <div class="card">
+            <div class="card-title">
+                <span>📌</span> Informasi & Integrasi
+            </div>
+            <div style="font-size:0.75rem; line-height:1.5; color: #2c3e4e;">
+                <p>✅ Pengaturan ini menyimpan data ke <strong>localStorage</strong> dengan key: <code>warehouse_admin_password</code>, <code>warehouse_custom_divisions</code>, serta semua data utama (operator, aktivitas, barang masuk/keluar, konsumabel).</p>
+                <p>🔗 <strong>Integrasi dengan panel utama:</strong> Pastikan file <strong>WarehousePro Admin Panel</strong> mendukung pembacaan divisi kustom dan password dari localStorage. Anda dapat mengganti login hardcoded dengan membaca <code>localStorage.getItem('warehouse_admin_password')</code>.</p>
+                <p>🛠️ Fitur tambahan: reset data mengembalikan data contoh (operator awal, sample activity, dsb) sesuai versi demo.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ======================= CONSTANTS & STORAGE KEYS =======================
+    const STORAGE_KEYS = {
+        OPERATORS: 'warehouse_operators',
+        DAILY_ACTIVITIES: 'warehouse_daily_activities',
+        STOCK_IN: 'warehouse_stock_in',
+        STOCK_OUT: 'warehouse_stock_out',
+        CONSUMABLE: 'warehouse_consumable',
+        ADMIN_PASSWORD: 'warehouse_admin_password',
+        CUSTOM_DIVISIONS: 'warehouse_custom_divisions'
+    };
+
+    // Data default (sama seperti inisialisasi awal di main panel)
+    const DEFAULT_OPERATORS = [
+        { id: 1, division: "Leader", name: "Oky Dany P." },
+        { id: 2, division: "Raw Material", name: "Darma" },
+        { id: 3, division: "Raw Material", name: "Nurhadi" },
+        { id: 4, division: "Finish Goods", name: "Athar" },
+        { id: 5, division: "Save Material", name: "Purnomo" }
+    ];
+
+    const DEFAULT_DIVISIONS = ["Leader", "Raw Material", "Finish Goods", "Save Material"];
+
+    // Helper: notifikasi
+    function showToast(message, isError = false) {
+        let toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.innerText = message;
+        if (isError) toast.style.background = '#d32f2f';
+        else toast.style.background = '#008080';
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.remove(); }, 2800);
+    }
+
+    // Load & Save generic
+    function loadData(key, defaultValue) {
+        const stored = localStorage.getItem(key);
+        if (stored) {
+            try {
+                return JSON.parse(stored);
+            } catch(e) { return defaultValue; }
+        }
+        return defaultValue;
+    }
+
+    function saveData(key, value) {
+        localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    // Update statistik UI
+    function updateStorageStats() {
+        const operators = loadData(STORAGE_KEYS.OPERATORS, []);
+        const activitiesMap = loadData(STORAGE_KEYS.DAILY_ACTIVITIES, {});
+        let totalActivities = 0;
+        Object.values(activitiesMap).forEach(arr => totalActivities += arr.length);
+        const stockIn = loadData(STORAGE_KEYS.STOCK_IN, []);
+        const stockOut = loadData(STORAGE_KEYS.STOCK_OUT, []);
+        const consumable = loadData(STORAGE_KEYS.CONSUMABLE, []);
+        const statsDiv = document.getElementById('storageStats');
+        if(statsDiv) {
+            statsDiv.innerHTML = `👥 Operator: ${operators.length} | 📋 Aktivitas: ${totalActivities} | 📥 Masuk: ${stockIn.length} | 📤 Keluar: ${stockOut.length} | 📦 Konsumabel: ${consumable.length}`;
+        }
+    }
+
+    // ======================= PASSWORD MANAGEMENT =======================
+    function getAdminPassword() {
+        let pwd = localStorage.getItem(STORAGE_KEYS.ADMIN_PASSWORD);
+        if (!pwd) {
+            pwd = "admin123";
+            localStorage.setItem(STORAGE_KEYS.ADMIN_PASSWORD, pwd);
+        }
+        return pwd;
+    }
+
+    function updatePasswordStatusUI() {
+        const currentPwd = getAdminPassword();
+        const isDefault = (currentPwd === "admin123");
+        document.getElementById('passwordStatus').innerHTML = isDefault ? "Menggunakan password default (admin123)" : "✅ Password kustom telah diatur";
+    }
+
+    // Change password
+    function changeAdminPassword(oldPass, newPass, confirmPass) {
+        if(!oldPass || !newPass || !confirmPass) {
+            showToast("Semua field password harus diisi!", true);
+            return false;
+        }
+        if(newPass.length < 6) {
+            showToast("Password baru minimal 6 karakter", true);
+            return false;
+        }
+        if(newPass !== confirmPass) {
+            showToast("Password baru dan konfirmasi tidak cocok", true);
+            return false;
+        }
+        const currentValid = getAdminPassword();
+        if(oldPass !== currentValid) {
+            showToast("Password lama salah!", true);
+            return false;
+        }
+        localStorage.setItem(STORAGE_KEYS.ADMIN_PASSWORD, newPass);
+        showToast("✅ Password admin berhasil diubah!");
+        updatePasswordStatusUI();
+        document.getElementById('oldPassword').value = "";
+        document.getElementById('newPassword').value = "";
+        document.getElementById('confirmPassword').value = "";
+        return true;
+    }
+
+    // ======================= DIVISIONS MANAGEMENT =======================
+    function getDivisions() {
+        let divisions = loadData(STORAGE_KEYS.CUSTOM_DIVISIONS, null);
+        if (!divisions || !Array.isArray(divisions) || divisions.length === 0) {
+            divisions = [...DEFAULT_DIVISIONS];
+            saveData(STORAGE_KEYS.CUSTOM_DIVISIONS, divisions);
+        }
+        return divisions;
+    }
+
+    function saveDivisions(divisions) {
+        saveData(STORAGE_KEYS.CUSTOM_DIVISIONS, divisions);
+        renderDivisionsList();
+        showToast("Daftar divisi diperbarui");
+    }
+
+    function addDivision(name) {
+        if(!name.trim()) {
+            showToast("Nama divisi tidak boleh kosong", true);
+            return false;
+        }
+        let divisions = getDivisions();
+        if(divisions.includes(name.trim())) {
+            showToast("Divisi sudah ada!", true);
+            return false;
+        }
+        divisions.push(name.trim());
+        saveDivisions(divisions);
+        return true;
+    }
+
+    function editDivision(oldName, newName) {
+        if(!newName.trim()) return false;
+        let divisions = getDivisions();
+        const idx = divisions.indexOf(oldName);
+        if(idx !== -1 && !divisions.includes(newName.trim())) {
+            divisions[idx] = newName.trim();
+            saveDivisions(divisions);
+            // juga perlu update operator yang memiliki division lama? (opsional)
+            let operators = loadData(STORAGE_KEYS.OPERATORS, []);
+            let updated = false;
+            operators = operators.map(op => {
+                if(op.division === oldName) {
+                    updated = true;
+                    return { ...op, division: newName.trim() };
+                }
+                return op;
+            });
+            if(updated) saveData(STORAGE_KEYS.OPERATORS, operators);
+            showToast(`Divisi "${oldName}" diubah menjadi "${newName.trim()}"`);
+            renderDivisionsList();
+            updateStorageStats();
+            return true;
+        } else {
+            showToast("Gagal mengedit: nama baru mungkin sudah ada", true);
+            return false;
+        }
+    }
+
+    function deleteDivision(divisionName) {
+        let divisions = getDivisions();
+        if(divisions.length <= 1) {
+            showToast("Minimal harus ada satu divisi! Tidak dapat menghapus semua.", true);
+            return false;
+        }
+        if(DEFAULT_DIVISIONS.includes(divisionName) && divisions.length === DEFAULT_DIVISIONS.length) {
+            if(!confirm(`"${divisionName}" adalah divisi default. Hapus tetap? Data operator dengan divisi ini akan diubah ke divisi pertama.`)) return false;
+        }
+        // cek operator yang memakai divisi ini -> reassign ke divisi pertama
+        let operators = loadData(STORAGE_KEYS.OPERATORS, []);
+        const remainingDivisions = divisions.filter(d => d !== divisionName);
+        if(operators.some(op => op.division === divisionName)) {
+            let newDefaultDiv = remainingDivisions[0];
+            operators = operators.map(op => {
+                if(op.division === divisionName) return { ...op, division: newDefaultDiv };
+                return op;
+            });
+            saveData(STORAGE_KEYS.OPERATORS, operators);
+            showToast(`Operator dengan divisi "${divisionName}" dipindah ke "${newDefaultDiv}"`);
+        }
+        const newDivisions = divisions.filter(d => d !== divisionName);
+        saveDivisions(newDivisions);
+        updateStorageStats();
+        renderDivisionsList();
+        return true;
+    }
+
+    function renderDivisionsList() {
+        const divisions = getDivisions();
+        const container = document.getElementById('divisionsListContainer');
+        if(!container) return;
+        if(divisions.length === 0) {
+            container.innerHTML = '<div style="padding: 16px;text-align:center">Tidak ada divisi</div>';
+            return;
+        }
+        let html = '';
+        divisions.forEach(div => {
+            html += `
+                <div class="division-item" data-division="${div}">
+                    <span class="division-name">🏷️ ${div}</span>
+                    <div class="division-actions">
+                        <button class="icon-btn-small edit-division" data-name="${div}">✏️ Edit</button>
+                        <button class="icon-btn-small delete" data-name="${div}">🗑️ Hapus</button>
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+        // attach events
+        document.querySelectorAll('.edit-division').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const oldName = btn.getAttribute('data-name');
+                const newName = prompt("Masukkan nama divisi baru:", oldName);
+                if(newName && newName !== oldName) {
+                    editDivision(oldName, newName);
+                }
+            });
+        });
+        document.querySelectorAll('.division-item .delete').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const divName = btn.getAttribute('data-name');
+                if(confirm(`Hapus divisi "${divName}"? Data operator dengan divisi ini akan dialihkan.`)) {
+                    deleteDivision(divName);
+                }
+            });
+        });
+    }
+
+    // ======================= DATA MANAGEMENT (BACKUP, RESET, CLEAR) =======================
+    function exportAllData() {
+        const fullState = {
+            version: "3.2-settings",
+            exportDate: new Date().toISOString(),
+            operators: loadData(STORAGE_KEYS.OPERATORS, []),
+            dailyActivities: loadData(STORAGE_KEYS.DAILY_ACTIVITIES, {}),
+            stockIn: loadData(STORAGE_KEYS.STOCK_IN, []),
+            stockOut: loadData(STORAGE_KEYS.STOCK_OUT, []),
+            consumable: loadData(STORAGE_KEYS.CONSUMABLE, []),
+            customDivisions: getDivisions(),
+            adminPasswordHash: getAdminPassword() // tersimpan aman
+        };
+        const dataStr = JSON.stringify(fullState, null, 2);
+        const blob = new Blob([dataStr], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `warehouse_backup_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast("Ekspor data selesai");
+    }
+
+    function importDataFromFile(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const imported = JSON.parse(e.target.result);
+                if(imported.operators) saveData(STORAGE_KEYS.OPERATORS, imported.operators);
+                if(imported.dailyActivities) saveData(STORAGE_KEYS.DAILY_ACTIVITIES, imported.dailyActivities);
+                if(imported.stockIn) saveData(STORAGE_KEYS.STOCK_IN, imported.stockIn);
+                if(imported.stockOut) saveData(STORAGE_KEYS.STOCK_OUT, imported.stockOut);
+                if(imported.consumable) saveData(STORAGE_KEYS.CONSUMABLE, imported.consumable);
+                if(imported.customDivisions && Array.isArray(imported.customDivisions)) saveData(STORAGE_KEYS.CUSTOM_DIVISIONS, imported.customDivisions);
+                if(imported.adminPasswordHash && typeof imported.adminPasswordHash === 'string') localStorage.setItem(STORAGE_KEYS.ADMIN_PASSWORD, imported.adminPasswordHash);
+                
+                showToast("✅ Import berhasil! Halaman akan dimuat ulang.");
+                setTimeout(() => { window.location.reload(); }, 1200);
+            } catch(err) {
+                showToast("❌ File backup tidak valid!", true);
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    function resetToDefaultData() {
+        if(!confirm("⚠️ RESET KE DATA AWAL akan menghapus semua data saat ini dan mengembalikan ke contoh awal (operator demo, activity demo). Lanjutkan?")) return;
+        // Reset operators
+        saveData(STORAGE_KEYS.OPERATORS, DEFAULT_OPERATORS);
+        // Reset daily activities dengan contoh
+        const todayStr = new Date().toISOString().slice(0,10);
+        const sampleActivity = {
+            [todayStr]: [
+                { id: 1, division: "Leader", workerName: "Oky Dany P.", activity: "Koordinasi tim operasional", startTime: "08:00", endTime: "10:00", duration: "2 jam 0 menit", description: "Meeting pagi" }
+            ]
+        };
+        saveData(STORAGE_KEYS.DAILY_ACTIVITIES, sampleActivity);
+        // Kosongkan stock, stock out, consumable
+        saveData(STORAGE_KEYS.STOCK_IN, []);
+        saveData(STORAGE_KEYS.STOCK_OUT, []);
+        saveData(STORAGE_KEYS.CONSUMABLE, []);
+        // Divisi kembali ke default
+        saveData(STORAGE_KEYS.CUSTOM_DIVISIONS, [...DEFAULT_DIVISIONS]);
+        // Password tidak direset biarkan yang sudah ada
+        showToast("Data berhasil direset ke kondisi awal demo.");
+        updateStorageStats();
+        renderDivisionsList();
+        updatePasswordStatusUI();
+    }
+
+    function clearAllData() {
+        if(!confirm("🚨 INI AKAN MENGHAPUS SEMUA DATA (operator, aktivitas, barang masuk/keluar, konsumabel, divisi kustom). Password admin TIDAK direset. Yakin?")) return;
+        localStorage.removeItem(STORAGE_KEYS.OPERATORS);
+        localStorage.removeItem(STORAGE_KEYS.DAILY_ACTIVITIES);
+        localStorage.removeItem(STORAGE_KEYS.STOCK_IN);
+        localStorage.removeItem(STORAGE_KEYS.STOCK_OUT);
+        localStorage.removeItem(STORAGE_KEYS.CONSUMABLE);
+        localStorage.removeItem(STORAGE_KEYS.CUSTOM_DIVISIONS);
+        // tidak menghapus password
+        showToast("Semua data utama telah dibersihkan. Halaman akan refresh.");
+        setTimeout(() => window.location.reload(), 1000);
+    }
+
+    // ======================= INITIALIZE & EVENT LISTENERS =======================
+    function initSettings() {
+        // Inisialisasi default jika belum ada
+        if(!localStorage.getItem(STORAGE_KEYS.OPERATORS)) saveData(STORAGE_KEYS.OPERATORS, DEFAULT_OPERATORS);
+        if(!localStorage.getItem(STORAGE_KEYS.DAILY_ACTIVITIES)) {
+            const initActs = {};
+            const today = new Date().toISOString().slice(0,10);
+            initActs[today] = [
+                { id: 1, division: "Leader", workerName: "Oky Dany P.", activity: "Koordinasi tim operasional", startTime: "08:00", endTime: "10:00", duration: "2 jam 0 menit", description: "Meeting pagi" }
+            ];
+            saveData(STORAGE_KEYS.DAILY_ACTIVITIES, initActs);
+        }
+        if(!localStorage.getItem(STORAGE_KEYS.STOCK_IN)) saveData(STORAGE_KEYS.STOCK_IN, []);
+        if(!localStorage.getItem(STORAGE_KEYS.STOCK_OUT)) saveData(STORAGE_KEYS.STOCK_OUT, []);
+        if(!localStorage.getItem(STORAGE_KEYS.CONSUMABLE)) saveData(STORAGE_KEYS.CONSUMABLE, []);
+        if(!localStorage.getItem(STORAGE_KEYS.CUSTOM_DIVISIONS)) saveData(STORAGE_KEYS.CUSTOM_DIVISIONS, [...DEFAULT_DIVISIONS]);
+        if(!localStorage.getItem(STORAGE_KEYS.ADMIN_PASSWORD)) localStorage.setItem(STORAGE_KEYS.ADMIN_PASSWORD, "admin123");
+
+        updatePasswordStatusUI();
+        renderDivisionsList();
+        updateStorageStats();
+
+        // Event listeners
+        document.getElementById('changePasswordBtn').addEventListener('click', () => {
+            const old = document.getElementById('oldPassword').value;
+            const newPwd = document.getElementById('newPassword').value;
+            const confirmPwd = document.getElementById('confirmPassword').value;
+            changeAdminPassword(old, newPwd, confirmPwd);
+        });
+
+        document.getElementById('addDivisionBtn').addEventListener('click', () => {
+            const newDivName = document.getElementById('newDivisionName').value.trim();
+            if(addDivision(newDivName)) document.getElementById('newDivisionName').value = '';
+        });
+
+        document.getElementById('exportFullDataBtn').addEventListener('click', exportAllData);
+        document.getElementById('importDataTriggerBtn').addEventListener('click', () => {
+            document.getElementById('importFileInput').click();
+        });
+        document.getElementById('importFileInput').addEventListener('change', (e) => {
+            if(e.target.files && e.target.files[0]) importDataFromFile(e.target.files[0]);
+            e.target.value = '';
+        });
+        document.getElementById('resetDefaultDataBtn').addEventListener('click', resetToDefaultData);
+        document.getElementById('clearAllDataBtn').addEventListener('click', clearAllData);
+        document.getElementById('openMainDashboardBtn').addEventListener('click', () => {
+            window.location.href = "index.html"; // asumsi file utama bernama index.html, bisa diedit user
+        });
+        document.getElementById('syncSettingsNoteBtn').addEventListener('click', () => {
+            showToast("Divisi tersimpan & password: pastikan main panel membaca localStorage dengan key yang sesuai.");
+        });
+    }
+
+    initSettings();
+</script>
+</body>
+</html>
