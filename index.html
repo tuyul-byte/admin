@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>WarehousePro - Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #008080 0%, #004d4d 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+        }
+        .logo {
+            font-size: 85px;
+            margin-bottom: 20px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        h1 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: white;
+            margin-bottom: 15px;
+        }
+        .tagline {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.8rem;
+            margin-bottom: 35px;
+        }
+        .card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 28px;
+            padding: 32px 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+        .welcome-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #008080;
+            margin-bottom: 8px;
+        }
+        .description {
+            font-size: 0.7rem;
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 16px 24px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            background: #008080;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,128,128,0.3);
+        }
+        .btn:hover {
+            background: #006666;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,128,128,0.4);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        .feature {
+            font-size: 0.6rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .feature span {
+            font-size: 0.8rem;
+        }
+        .info-box {
+            background: #e0f2f1;
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 20px;
+        }
+        .info-box p {
+            font-size: 0.6rem;
+            color: #008080;
+            margin: 4px 0;
+        }
+        .info-box .password-hint {
+            font-family: monospace;
+            background: white;
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 30px;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.55rem;
+        }
+        @media (max-width: 480px) {
+            .card { padding: 24px 20px; }
+            .btn { padding: 14px 20px; font-size: 0.9rem; }
+            .logo { font-size: 65px; }
+            h1 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🏭</div>
+        <h1>WarehousePro</h1>
+        <div class="badge">ADMIN PANEL</div>
+        <div class="tagline">Sistem Manajemen Gudang</div>
+        
+        <div class="card">
+            <div class="welcome-text">Selamat Datang, Administrator!</div>
+            <div class="description">
+                Kelola seluruh data gudang, pantau aktivitas operator, 
+                dan lakukan sinkronisasi data melalui QR Code.
+            </div>
+            
+            <a href="admin.html" class="btn">
+                🔐 Masuk ke Admin Panel
+            </a>
+            
+            <div class="features">
+                <div class="feature"><span>👥</span> Kelola Operator</div>
+                <div class="feature"><span>📋</span> Daily Activity</div>
+                <div class="feature"><span>📥📤</span> Stock Management</div>
+                <div class="feature"><span>📦</span> Barang Konsumabel</div>
+                <div class="feature"><span>📷</span> Scan QR</div>
+                <div class="feature"><span>📎</span> Export Excel</div>
+                <div class="feature"><span>🎨</span> Custom Theme</div>
+            </div>
+            
+            <div class="info-box">
+                <p>🔐 <strong>Informasi Login Admin</strong></p>
+                <p>Password: <span class="password-hint">leader01</span></p>
+                <p style="font-size:0.55rem; margin-top:6px;">💡 Gunakan QR Scanner untuk sinkronisasi data dari operator</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2024 WarehousePro | All Rights Reserved</p>
+        </div>
+    </div>
+</body>
+</html>
