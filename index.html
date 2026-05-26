@@ -19,7 +19,6 @@
             width: 100vw;
         }
         
-        /* Login Page */
         .login-container {
             position: fixed;
             top: 0;
@@ -115,15 +114,25 @@
         .sync-btn-qr { background: #6c5ce7; }
         .sync-btn-wa { background: #25D366; }
         
-        .table-responsive { overflow-x: auto; margin-top: 6px; border-radius: 12px; border: 1px solid #eef2f6; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.7rem; min-width: 600px; }
-        th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid #eef2f8; vertical-align: middle; }
+        .table-responsive { overflow-x: auto; margin-top: 6px; border-radius: 12px; border: 1px solid #eef2f6; width: 100%; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.7rem; }
+        table td, table th { 
+            white-space: nowrap; 
+            padding: 10px 8px; 
+            border-bottom: 1px solid #eef2f8; 
+            vertical-align: middle;
+        }
         th { background: #f8fafc; border-bottom: 2px solid #e2e8f0; font-weight: 600; }
         .badge { background: #e0f2f1; padding: 3px 8px; border-radius: 30px; font-size: 0.6rem; color: #008080; display: inline-block; }
-        .action-icons { display: flex; gap: 8px; }
+        .action-icons { display: flex; gap: 8px; white-space: nowrap; }
         .edit-icon, .delete-icon { cursor: pointer; font-size: 0.9rem; padding: 4px; border-radius: 6px; }
         .edit-icon { color: #008080; }
         .delete-icon { color: #e65100; }
+        
+        @media (max-width: 640px) {
+            .table-responsive { overflow-x: auto; }
+            table { min-width: 800px; }
+        }
         
         .modal {
             display: none;
@@ -166,10 +175,6 @@
             border: 1px solid #eef2f6;
             transition: all 0.2s;
         }
-        .operator-item:hover {
-            background: #f0f7f0;
-            border-color: #c8e6c9;
-        }
         .operator-info {
             display: flex;
             flex-direction: column;
@@ -203,9 +208,7 @@
             transition: all 0.1s;
             background: #eef2f8;
         }
-        .operator-edit:active, .operator-delete:active {
-            transform: scale(0.95);
-        }
+        .operator-edit:active, .operator-delete:active { transform: scale(0.95); }
         .operator-edit { color: #008080; }
         .operator-delete { color: #e65100; }
         
@@ -227,9 +230,6 @@
             .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 999; }
             .sidebar-overlay.active { display: block; }
             .form-row { flex-direction: column; }
-            .operator-item { padding: 10px 12px; }
-            .operator-name { font-size: 0.75rem; }
-            .operator-edit, .operator-delete { padding: 4px 8px; font-size: 0.75rem; }
         }
     </style>
 </head>
@@ -254,7 +254,6 @@
             <div class="nav-item" data-menu="stock-in"><span>📥</span><span>Barang Masuk</span></div>
             <div class="nav-item" data-menu="stock-out"><span>📤</span><span>Barang Keluar</span></div>
             <div class="nav-item" data-menu="consumable"><span>📦</span><span>Barang Konsumabel</span></div>
-            <!-- Tombol Scan QR dipindahkan ke menu navigasi -->
             <div class="nav-item" id="scanQRNavBtn"><span>📷</span><span>Scan QR Operator</span></div>
             <div class="nav-item nav-item-logout" id="logoutBtn"><span>🚪</span><span>Logout</span></div>
         </div>
@@ -296,7 +295,6 @@
     
     const allDivisions = ["Leader", "Raw Material", "Finish Goods", "Save Material"];
     
-    // Load data dari localStorage
     function loadData() {
         const storedOps = localStorage.getItem('warehouse_operators');
         if(storedOps) dynamicOperators = JSON.parse(storedOps);
@@ -404,19 +402,16 @@
         return false;
     }
     
-    // Stock In functions
     function getNextStockInId() { return stockInEntries.length > 0 ? Math.max(...stockInEntries.map(s => s.id)) + 1 : 1; }
     function addStockIn(data) { data.id = getNextStockInId(); stockInEntries.push(data); saveAllData(); renderCurrentMenu(); }
     function updateStockIn(id, data) { const idx = stockInEntries.findIndex(s => s.id === id); if(idx !== -1) { stockInEntries[idx] = { ...stockInEntries[idx], ...data }; saveAllData(); renderCurrentMenu(); } }
     function deleteStockIn(id) { stockInEntries = stockInEntries.filter(s => s.id !== id); saveAllData(); renderCurrentMenu(); }
     
-    // Stock Out functions
     function getNextStockOutId() { return stockOutEntries.length > 0 ? Math.max(...stockOutEntries.map(s => s.id)) + 1 : 1; }
     function addStockOut(data) { data.id = getNextStockOutId(); stockOutEntries.push(data); saveAllData(); renderCurrentMenu(); }
     function updateStockOut(id, data) { const idx = stockOutEntries.findIndex(s => s.id === id); if(idx !== -1) { stockOutEntries[idx] = { ...stockOutEntries[idx], ...data }; saveAllData(); renderCurrentMenu(); } }
     function deleteStockOut(id) { stockOutEntries = stockOutEntries.filter(s => s.id !== id); saveAllData(); renderCurrentMenu(); }
     
-    // Consumable functions
     function getNextConsumableId() { return consumableEntries.length > 0 ? Math.max(...consumableEntries.map(c => c.id)) + 1 : 1; }
     function addConsumable(data) { data.id = getNextConsumableId(); consumableEntries.push(data); saveAllData(); renderCurrentMenu(); }
     function updateConsumable(id, data) { const idx = consumableEntries.findIndex(c => c.id === id); if(idx !== -1) { consumableEntries[idx] = { ...consumableEntries[idx], ...data }; saveAllData(); renderCurrentMenu(); } }
@@ -429,7 +424,6 @@
     function formatDateToStorage(date) { return date.toISOString().slice(0,10); }
     function calculateDuration(start,end) { if(!start||!end) return "-"; let startDate = new Date(`2000-01-01T${start}`); let endDate = new Date(`2000-01-01T${end}`); let diff = (endDate-startDate)/(1000*60); if(diff<0) diff+=24*60; return `${Math.floor(diff/60)} jam ${diff%60} menit`; }
     
-    // QR SCAN HANDLER
     async function startScanner() {
         const scanStatus = document.getElementById("scanStatus");
         if(html5QrCode && isScanning) { try { await html5QrCode.stop(); } catch(e) {} isScanning = false; }
@@ -508,7 +502,6 @@
         scanStatus.className = "scan-status " + className;
     }
     
-    // RENDER FUNCTIONS
     function renderCurrentMenu() {
         if(currentMenu === "daily-activity") renderAdminDailyActivity();
         else if(currentMenu === "operators") renderOperatorsList();
@@ -518,7 +511,6 @@
     }
     
     function renderSyncSection() {
-        // Tombol scan QR sudah dipindah, jadi bagian ini hanya untuk Export/Import/Share
         return `<div style="background:#e8f5e9; border-radius:14px; padding:10px 12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-top:auto;">
                     <div style="font-size:0.65rem; font-weight:600; color:#2e7d32;">📡 Sinkronisasi Data</div>
                     <div style="display:flex; gap:6px; flex-wrap:wrap;">
@@ -604,7 +596,7 @@
             <td>${act.description||'-'}</td>
             <td class="action-icons"><span class="edit-icon" data-id="${act.id}">✏️</span><span class="delete-icon" data-id="${act.id}">🗑️</span></td>
         </tr>`).join('');
-        if(filtered.length === 0) tableRows = `<tr><td colspan="7" style="text-align:center; padding:24px;">✨ Belum ada aktivitas</td><tr>`;
+        if(filtered.length === 0) tableRows = `<tr><td colspan="7" style="text-align:center; padding:24px;">✨ Belum ada aktivitas</td></tr>`;
         
         let html = `<div class="scrollable-content"><div class="card-panel"><div class="section-title"><span>📋 Daily Activity - ${toDisplayDate(currentViewDate)}</span><div class="btn-group-right"><button class="icon-btn icon-excel" id="exportExcelBtn">📎</button><button class="icon-btn icon-print" id="printBtn">🖨️</button><button class="btn-text" id="addActivityBtn">+ Tambah</button></div></div><div class="division-tabs">${divisionTabs}</div>${workerSubtabs}<div class="table-responsive"><table><thead><tr><th>Pekerja</th><th>Aktivitas</th><th>Mulai</th><th>Selesai</th><th>Durasi</th><th>Keterangan</th><th>Aksi</th></tr></thead><tbody>${tableRows}</tbody></table></div></div><div class="date-navigator"><button class="date-nav-btn" id="prevDateBtn">◀ Sebelumnya</button><span class="current-date-display">${toDisplayDate(currentViewDate)}<span class="daily-tag">Harian</span></span><button class="date-nav-btn" id="nextDateBtn">Berikutnya ▶</button><button class="date-nav-btn" id="todayDateBtn">📅 Hari Ini</button></div></div>${renderSyncSection()}`;
         document.getElementById("appContainer").innerHTML = html;
@@ -638,7 +630,7 @@
             <td>${s.pic}</td>
             <td class="action-icons"><span class="edit-icon" data-id="${s.id}" data-type="in">✏️</span><span class="delete-icon" data-id="${s.id}" data-type="in">🗑️</span></td>
         </tr>`).join('');
-        if(stockInEntries.length === 0) tableRows = `<tr><td colspan="11" style="text-align:center; padding:24px;">📭 Belum ada data</td><tr>`;
+        if(stockInEntries.length === 0) tableRows = `<tr><td colspan="11" style="text-align:center; padding:24px;">📭 Belum ada data</td></tr>`;
         let html = `<div class="scrollable-content"><div class="card-panel"><div class="section-title"><span>📥 Barang Masuk</span><div class="btn-group-right"><button class="icon-btn icon-excel" id="exportStockInExcelBtn">📎</button><button class="icon-btn icon-print" id="printStockInBtn">🖨️</button><button class="btn-text" id="addStockInBtn">+ Tambah</button></div></div><div class="table-responsive"><table><thead><tr><th>Tanggal</th><th>Jam</th><th>Deskripsi</th><th>Supplier</th><th>No PO</th><th>No SJ</th><th>Jumlah</th><th>Satuan</th><th>Keterangan</th><th>PIC</th><th>Aksi</th></tr></thead><tbody>${tableRows}</tbody></table></div></div></div>${renderSyncSection()}`;
         document.getElementById("appContainer").innerHTML = html;
         document.getElementById("pageTitle").innerText = "Barang Masuk";
@@ -651,48 +643,105 @@
         attachSyncEvents();
     }
     
+    // PERBAIKAN UTAMA: Tabel Barang Keluar - DITULIS ULANG
     function renderStockOut() {
-        let tableRows = stockOutEntries.map(s => `<tr>
-            <td>${toDisplayDate(s.tanggal)}</td>
-            <td>${s.jam}</td>
-            <td>${s.deskripsi}</td>
-            <td>${s.jumlah}</td>
-            <td>${s.satuan}</td>
-            <td>${s.ekspedisi}</td>
-            <td>${s.user}</td>
-            <td>${s.keterangan||'-'}</td>
-            <td>${s.pic}</td>
-            <td class="action-icons"><span class="edit-icon" data-id="${s.id}" data-type="out">✏️</span><span class="delete-icon" data-id="${s.id}" data-type="out">🗑️</span></td>
-        </tr>`).join('');
-        if(stockOutEntries.length === 0) tableRows = `<tr><td colspan="10" style="text-align:center; padding:24px;">📭 Belum ada data</td><tr>`;
-        let html = `<div class="scrollable-content"><div class="card-panel"><div class="section-title"><span>📤 Barang Keluar</span><div class="btn-group-right"><button class="icon-btn icon-excel" id="exportStockOutExcelBtn">📎</button><button class="icon-btn icon-print" id="printStockOutBtn">🖨️</button><button class="btn-text" id="addStockOutBtn">+ Tambah</button></div></div><div class="table-responsive"><table><thead><tr><th>Tanggal</th><th>Jam</th><th>Deskripsi</th><th>Jumlah</th><th>Satuan</th><th>Ekspedisi</th><th>User</th><th>Keterangan</th><th>PIC</th><th>Aksi</th></tr></thead><tbody>${tableRows}</tbody></table></div></div></div>${renderSyncSection()}`;
+        let tableRows = '';
+        
+        if(stockOutEntries.length === 0) {
+            tableRows = `<tr><td colspan="10" style="text-align:center; padding:24px;">📭 Belum ada data barang keluar</td></tr>`;
+        } else {
+            for(let i = 0; i < stockOutEntries.length; i++) {
+                let s = stockOutEntries[i];
+                tableRows += `<tr>
+                    <td style="white-space:nowrap;">${toDisplayDate(s.tanggal)}</td>
+                    <td>${s.jam}</td>
+                    <td>${s.deskripsi}</td>
+                    <td>${s.jumlah}</td>
+                    <td>${s.satuan}</td>
+                    <td>${s.ekspedisi || '-'}</td>
+                    <td>${s.user || '-'}</td>
+                    <td>${s.keterangan || '-'}</td>
+                    <td>${s.pic || '-'}</td>
+                    <td class="action-icons">
+                        <span class="edit-icon" data-id="${s.id}" data-type="out">✏️</span>
+                        <span class="delete-icon" data-id="${s.id}" data-type="out">🗑️</span>
+                    </td>
+                </tr>`;
+            }
+        }
+        
+        let html = `<div class="scrollable-content">
+                        <div class="card-panel">
+                            <div class="section-title">
+                                <span>📤 Barang Keluar</span>
+                                <div class="btn-group-right">
+                                    <button class="icon-btn icon-excel" id="exportStockOutExcelBtn">📎</button>
+                                    <button class="icon-btn icon-print" id="printStockOutBtn">🖨️</button>
+                                    <button class="btn-text" id="addStockOutBtn">+ Tambah</button>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Tanggal</th>
+                                            <th>Jam</th>
+                                            <th>Deskripsi</th>
+                                            <th>Jumlah</th>
+                                            <th>Satuan</th>
+                                            <th>Ekspedisi</th>
+                                            <th>User</th>
+                                            <th>Keterangan</th>
+                                            <th>PIC</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${tableRows}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    ${renderSyncSection()}`;
+        
         document.getElementById("appContainer").innerHTML = html;
         document.getElementById("pageTitle").innerText = "Barang Keluar";
+        document.getElementById("pageDesc").innerText = "Kelola data barang keluar";
+        
         document.getElementById("addStockOutBtn")?.addEventListener("click", () => openStockOutModal());
         document.getElementById("exportStockOutExcelBtn")?.addEventListener("click", () => exportToExcelStockOut());
         document.getElementById("printStockOutBtn")?.addEventListener("click", () => window.print());
-        document.querySelectorAll(".edit-icon[data-type='out']").forEach(icon => icon.addEventListener("click", () => openStockOutModal(parseInt(icon.dataset.id))));
-        document.querySelectorAll(".delete-icon[data-type='out']").forEach(icon => icon.addEventListener("click", () => { if(confirm("Hapus?")) deleteStockOut(parseInt(icon.dataset.id)); }));
+        
+        document.querySelectorAll(".edit-icon[data-type='out']").forEach(icon => {
+            icon.addEventListener("click", () => openStockOutModal(parseInt(icon.dataset.id)));
+        });
+        document.querySelectorAll(".delete-icon[data-type='out']").forEach(icon => {
+            icon.addEventListener("click", () => { 
+                if(confirm("Hapus data barang keluar?")) {
+                    deleteStockOut(parseInt(icon.dataset.id));
+                }
+            });
+        });
         attachSyncEvents();
     }
     
-    // PERBAIKAN UTAMA: TABEL BARANG KONSUMABEL
     function renderConsumable() {
         let tableRows = '';
         
         if(consumableEntries.length === 0) {
-            tableRows = `<tr><td colspan="8" style="text-align:center; padding:40px;">📭 Belum ada data barang konsumabel</td><tr>`;
+            tableRows = `<tr><td colspan="8" style="text-align:center; padding:40px;">📭 Belum ada data barang konsumabel</td></tr>`;
         } else {
             for(let i = 0; i < consumableEntries.length; i++) {
                 let c = consumableEntries[i];
                 tableRows += `<tr>
-                    <td>${toDisplayDate(c.tanggal)}</td>
+                    <td style="white-space:nowrap;">${toDisplayDate(c.tanggal)}</td>
                     <td>${c.deskripsi}</td>
                     <td>${c.jumlah}</td>
                     <td>${c.satuan}</td>
                     <td>${c.keterangan || '-'}</td>
-                    <td>${c.user}</td>
-                    <td>${c.pic}</td>
+                    <td>${c.user || '-'}</td>
+                    <td>${c.pic || '-'}</td>
                     <td class="action-icons">
                         <span class="edit-icon" data-id="${c.id}" data-type="con">✏️</span>
                         <span class="delete-icon" data-id="${c.id}" data-type="con">🗑️</span>
@@ -771,12 +820,12 @@
     }
     
     function exportToExcelStockOut() {
-        let exportData = stockOutEntries.map(s => ({ "Tanggal": toDisplayDate(s.tanggal), "Jam": s.jam, "Deskripsi": s.deskripsi, "Jumlah": s.jumlah, "Satuan": s.satuan, "Ekspedisi": s.ekspedisi, "User": s.user, "Keterangan": s.keterangan || "-", "PIC": s.pic }));
+        let exportData = stockOutEntries.map(s => ({ "Tanggal": toDisplayDate(s.tanggal), "Jam": s.jam, "Deskripsi": s.deskripsi, "Jumlah": s.jumlah, "Satuan": s.satuan, "Ekspedisi": s.ekspedisi || "-", "User": s.user || "-", "Keterangan": s.keterangan || "-", "PIC": s.pic || "-" }));
         let ws = XLSX.utils.json_to_sheet(exportData); let wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Barang Keluar"); XLSX.writeFile(wb, `Barang_Keluar_${new Date().toISOString().slice(0,10)}.xlsx`);
     }
     
     function exportToExcelConsumable() {
-        let exportData = consumableEntries.map(c => ({ "Tanggal": toDisplayDate(c.tanggal), "Deskripsi": c.deskripsi, "Jumlah": c.jumlah, "Satuan": c.satuan, "Keterangan": c.keterangan || "-", "User": c.user, "PIC": c.pic }));
+        let exportData = consumableEntries.map(c => ({ "Tanggal": toDisplayDate(c.tanggal), "Deskripsi": c.deskripsi, "Jumlah": c.jumlah, "Satuan": c.satuan, "Keterangan": c.keterangan || "-", "User": c.user || "-", "PIC": c.pic || "-" }));
         let ws = XLSX.utils.json_to_sheet(exportData); let wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Barang Konsumabel"); XLSX.writeFile(wb, `Barang_Konsumabel_${new Date().toISOString().slice(0,10)}.xlsx`);
     }
     
@@ -808,7 +857,6 @@
     }
     
     function attachSyncEvents() {
-        // Tombol Scan QR sekarang di navigasi, event listener dipasang di global
         document.getElementById("exportDataBtn")?.addEventListener("click", exportAllData);
         document.getElementById("shareWAbtn")?.addEventListener("click", () => { exportAllData(); alert("Data berhasil diexport! Kirim file ke tujuan."); });
         document.getElementById("importDataBtn")?.addEventListener("click", () => { let input = document.createElement('input'); input.type = 'file'; input.accept = '.json'; input.onchange = (e) => { if(e.target.files[0]) importDataFromFile(e.target.files[0]); }; input.click(); });
@@ -823,7 +871,6 @@
     }
     function goToToday() { currentViewDate = formatDateToStorage(new Date()); renderCurrentMenu(); }
     
-    // MODAL FUNCTIONS
     function openActivityModal(id, division, workerName, dateDisplay, activity, start, end, desc) {
         let modal = document.getElementById("activityModal");
         let divSelect = document.getElementById("actDivision");
@@ -1065,13 +1112,11 @@
         document.getElementById("loginError").textContent = "";
     }
 
-    // Fungsi untuk membuka modal scan QR
     function openScanQRModal() {
         document.getElementById("scanQRModal").style.display = "flex";
         startScanner();
     }
     
-    // INIT
     document.getElementById("loginBtn").addEventListener("click", () => {
         let pass = document.getElementById("adminPassword").value;
         if(pass === ADMIN_PASSWORD) {
@@ -1113,7 +1158,6 @@
         closeOperatorFormModal();
     });
     
-    // Event listener untuk tombol Scan QR di sidebar
     document.getElementById("scanQRNavBtn").addEventListener("click", openScanQRModal);
     
     window.addEventListener("click", (e) => {
@@ -1129,7 +1173,6 @@
     navItems.forEach(item => {
         item.addEventListener("click", () => {
             let menu = item.dataset.menu;
-            // Abaikan jika yang diklik adalah tombol scan QR atau logout
             if(item.id === "scanQRNavBtn" || item.id === "logoutBtn") return;
             if(menu === "daily-activity") { currentMenu = menu; renderCurrentMenu(); }
             else if(menu === "operators") { currentMenu = menu; renderCurrentMenu(); }
