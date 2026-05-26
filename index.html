@@ -254,6 +254,8 @@
             <div class="nav-item" data-menu="stock-in"><span>📥</span><span>Barang Masuk</span></div>
             <div class="nav-item" data-menu="stock-out"><span>📤</span><span>Barang Keluar</span></div>
             <div class="nav-item" data-menu="consumable"><span>📦</span><span>Barang Konsumabel</span></div>
+            <!-- Tombol Scan QR dipindahkan ke menu navigasi -->
+            <div class="nav-item" id="scanQRNavBtn"><span>📷</span><span>Scan QR Operator</span></div>
             <div class="nav-item nav-item-logout" id="logoutBtn"><span>🚪</span><span>Logout</span></div>
         </div>
         <div class="sidebar-footer">v3.2 • Admin</div>
@@ -516,10 +518,10 @@
     }
     
     function renderSyncSection() {
+        // Tombol scan QR sudah dipindah, jadi bagian ini hanya untuk Export/Import/Share
         return `<div style="background:#e8f5e9; border-radius:14px; padding:10px 12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-top:auto;">
-                    <div style="font-size:0.65rem; font-weight:600; color:#2e7d32;">📡 Sinkronisasi</div>
+                    <div style="font-size:0.65rem; font-weight:600; color:#2e7d32;">📡 Sinkronisasi Data</div>
                     <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                        <button class="sync-btn sync-btn-qr" id="scanQRBtn">📷 Scan QR Operator</button>
                         <button class="sync-btn" id="exportDataBtn">📤 Export</button>
                         <button class="sync-btn sync-btn-wa" id="shareWAbtn">💬 Share</button>
                         <button class="sync-btn" id="importDataBtn">📥 Import</button>
@@ -662,7 +664,7 @@
             <td>${s.pic}</td>
             <td class="action-icons"><span class="edit-icon" data-id="${s.id}" data-type="out">✏️</span><span class="delete-icon" data-id="${s.id}" data-type="out">🗑️</span></td>
         </tr>`).join('');
-        if(stockOutEntries.length === 0) tableRows = `<td><td colspan="10" style="text-align:center; padding:24px;">📭 Belum ada data</td><tr>`;
+        if(stockOutEntries.length === 0) tableRows = `<tr><td colspan="10" style="text-align:center; padding:24px;">📭 Belum ada data</td><tr>`;
         let html = `<div class="scrollable-content"><div class="card-panel"><div class="section-title"><span>📤 Barang Keluar</span><div class="btn-group-right"><button class="icon-btn icon-excel" id="exportStockOutExcelBtn">📎</button><button class="icon-btn icon-print" id="printStockOutBtn">🖨️</button><button class="btn-text" id="addStockOutBtn">+ Tambah</button></div></div><div class="table-responsive"><table><thead><tr><th>Tanggal</th><th>Jam</th><th>Deskripsi</th><th>Jumlah</th><th>Satuan</th><th>Ekspedisi</th><th>User</th><th>Keterangan</th><th>PIC</th><th>Aksi</th></tr></thead><tbody>${tableRows}</tbody></table></div></div></div>${renderSyncSection()}`;
         document.getElementById("appContainer").innerHTML = html;
         document.getElementById("pageTitle").innerText = "Barang Keluar";
@@ -679,7 +681,7 @@
         let tableRows = '';
         
         if(consumableEntries.length === 0) {
-            tableRows = `<tr><td colspan="8" style="text-align:center; padding:40px;">📭 Belum ada data barang konsumabel</td></tr>`;
+            tableRows = `<tr><td colspan="8" style="text-align:center; padding:40px;">📭 Belum ada data barang konsumabel</td><tr>`;
         } else {
             for(let i = 0; i < consumableEntries.length; i++) {
                 let c = consumableEntries[i];
@@ -806,9 +808,7 @@
     }
     
     function attachSyncEvents() {
-        document.getElementById("scanQRBtn")?.addEventListener("click", () => { document.getElementById("scanQRModal").style.display = "flex"; startScanner(); });
-        document.getElementById("stopScanBtn")?.addEventListener("click", () => stopScanner());
-        document.getElementById("closeScanModalBtn")?.addEventListener("click", () => { stopScanner(); document.getElementById("scanQRModal").style.display = "none"; });
+        // Tombol Scan QR sekarang di navigasi, event listener dipasang di global
         document.getElementById("exportDataBtn")?.addEventListener("click", exportAllData);
         document.getElementById("shareWAbtn")?.addEventListener("click", () => { exportAllData(); alert("Data berhasil diexport! Kirim file ke tujuan."); });
         document.getElementById("importDataBtn")?.addEventListener("click", () => { let input = document.createElement('input'); input.type = 'file'; input.accept = '.json'; input.onchange = (e) => { if(e.target.files[0]) importDataFromFile(e.target.files[0]); }; input.click(); });
@@ -1064,6 +1064,12 @@
         document.getElementById("adminPassword").value = "";
         document.getElementById("loginError").textContent = "";
     }
+
+    // Fungsi untuk membuka modal scan QR
+    function openScanQRModal() {
+        document.getElementById("scanQRModal").style.display = "flex";
+        startScanner();
+    }
     
     // INIT
     document.getElementById("loginBtn").addEventListener("click", () => {
@@ -1107,6 +1113,9 @@
         closeOperatorFormModal();
     });
     
+    // Event listener untuk tombol Scan QR di sidebar
+    document.getElementById("scanQRNavBtn").addEventListener("click", openScanQRModal);
+    
     window.addEventListener("click", (e) => {
         if(e.target === document.getElementById("activityModal")) closeActivityModal();
         if(e.target === document.getElementById("stockInModal")) closeStockInModal();
@@ -1120,6 +1129,8 @@
     navItems.forEach(item => {
         item.addEventListener("click", () => {
             let menu = item.dataset.menu;
+            // Abaikan jika yang diklik adalah tombol scan QR atau logout
+            if(item.id === "scanQRNavBtn" || item.id === "logoutBtn") return;
             if(menu === "daily-activity") { currentMenu = menu; renderCurrentMenu(); }
             else if(menu === "operators") { currentMenu = menu; renderCurrentMenu(); }
             else if(menu === "stock-in") { currentMenu = menu; renderCurrentMenu(); }
